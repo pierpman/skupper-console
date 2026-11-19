@@ -220,6 +220,14 @@ describe('ServicesController', () => {
       expect(ServicesController.mapListenersToRoutingKey(listeners)[0].edgeLabel).toBe('Priority');
     });
 
+    it('should not set an edge label for a multi-key listener without a strategy to show', () => {
+      const notApplicable = [{ ...multiKeyWeightedListener, strategy: ListenerStrategy.NotApplicable }];
+      const missing = [{ ...multiKeyWeightedListener, strategy: undefined }];
+
+      expect(ServicesController.mapListenersToRoutingKey(notApplicable)[0].edgeLabel).toBeUndefined();
+      expect(ServicesController.mapListenersToRoutingKey(missing)[0].edgeLabel).toBeUndefined();
+    });
+
     it('should not set an edge label for a single-key listener', () => {
       expect(ServicesController.mapListenersToRoutingKey([singleKeyListener])[0].edgeLabel).toBeUndefined();
     });
@@ -285,6 +293,20 @@ describe('ServicesController', () => {
 
       expect(getListenerNodeDetails(priorityListener)).toEqual(expected);
       expect(ServicesController.mapListenersToRoutingKey([priorityListener])[0].edgeLabel).toBe('Priority');
+    });
+
+    it('should show only the type for a multi-key listener without strategy nor multiple routing keys', () => {
+      const notApplicable = { ...multiKeyListener, strategy: ListenerStrategy.NotApplicable, routingKeyCount: 1 };
+      const missing = { ...multiKeyListener, strategy: undefined, routingKeyCount: undefined };
+
+      expect(getListenerNodeDetails(notApplicable)).toEqual(['Multi-key listener']);
+      expect(getListenerNodeDetails(missing)).toEqual(['Multi-key listener']);
+    });
+
+    it('should show only the routing keys count for a multi-key listener without strategy', () => {
+      const listener = { ...multiKeyListener, strategy: ListenerStrategy.NotApplicable, routingKeyCount: 3 };
+
+      expect(getListenerNodeDetails(listener)).toEqual(['Multi-key listener', '3 routing keys']);
     });
 
     it('should show only the type for a single-key listener', () => {

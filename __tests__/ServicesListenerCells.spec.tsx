@@ -46,6 +46,12 @@ describe('ListenerStrategyCell', () => {
     expect(screen.getByText('Priority')).toBeInTheDocument();
   });
 
+  it('should render the empty symbol when there is no data', () => {
+    render(<ListenerStrategyCell data={undefined as unknown as ListenerResponse} />);
+
+    expect(screen.getByText('-')).toBeInTheDocument();
+  });
+
   it('should render the empty symbol when the strategy is missing', () => {
     const data = { ...listener, strategy: undefined };
 
@@ -72,6 +78,12 @@ describe('ListenerTypeCell', () => {
     render(<ListenerTypeCell data={data} />);
 
     expect(screen.getByText('Single-key')).toBeInTheDocument();
+  });
+
+  it('should render the empty symbol when there is no data', () => {
+    render(<ListenerTypeCell data={undefined as unknown as ListenerResponse} />);
+
+    expect(screen.getByText('-')).toBeInTheDocument();
   });
 
   it('should render the empty symbol when the routing model is missing', () => {
@@ -108,6 +120,20 @@ describe('ListenerTypesCell', () => {
     render(<ListenerTypesCell data={data} />);
 
     expect(screen.getByText('Single-key')).toBeInTheDocument();
+  });
+
+  it('should render the empty symbol when the service has no listeners', () => {
+    const data = { ...service, listenerCount: 0, multiKeyListenerCount: 0 };
+
+    render(<ListenerTypesCell data={data} />);
+
+    expect(screen.getByText('-')).toBeInTheDocument();
+  });
+
+  it('should render the empty symbol when there is no data', () => {
+    render(<ListenerTypesCell data={undefined as unknown as ServiceResponse} />);
+
+    expect(screen.getByText('-')).toBeInTheDocument();
   });
 
   it('should render the empty symbol when the API does not return the multi-key count', () => {
