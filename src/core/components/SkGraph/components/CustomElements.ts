@@ -135,6 +135,7 @@ const LISTENER_CARD = {
   detailsY: [19, 31],
   detailsFontSize: theme.font.labelFontSize - 1
 };
+
 class SkListenerNode extends Rect {
   protected getIconStyle(attrs: Required<RectStyleProps>) {
     const style = super.getIconStyle(attrs);
